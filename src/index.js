@@ -9,7 +9,6 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 const knex = require("knex");
-const { response } = require("express");
 const db = knex({
   client: "mysql",
   connection: {
@@ -27,15 +26,29 @@ app.get("/", (request, response) => {
 
 app.post("/signup", (req, res) => {
   const { email, password, name } = req.body;
-  db.raw(
-    `INSERT INTO member (email, password, name) VALUES("${email}", "${password}", "${name}")`
-  )
-    .then(() => {
-      res.status(200).send("ok!");
+  /**
+   * ////////////////////////////////////////////////////완료!!!!!!!!!!!////////문제점1. email이 중복될 수 있다 ,,, 중복된 회원이 있을 수 있다 중복되는 사용자가 없게끔.
+   * 문제점2. 비밀번호 입력한 게 그대로 들어간다... 암호화!!!!!!!!!
+   */
+  db.raw(`SELECT email FROM member WHERE email = "${email}"`)
+    .then((response) => {
+      if (response[0].length == 0) {
+        db.raw(
+          `INSERT INTO member (email, password, name) VALUES("${email}", "${password}", "${name}")`
+        )
+          .then(() => {
+            res.status(200).send("ok!");
+          })
+          .catch((err) => {
+            console.log(err);
+            res.status(500).send("에러가 발생하였습니다.....");
+          });
+      } else {
+        res.status(409).send("중복된 이메일이 있다구요!!!!!!!!!!!!!!");
+      }
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send("에러가 발생하였습니다.....");
+      res.status(500).send("에러다!!!!!");
     });
 });
 
