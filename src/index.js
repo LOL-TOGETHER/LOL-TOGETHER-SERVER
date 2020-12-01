@@ -67,6 +67,22 @@ app.post("/signup", (req, res) => {
     });
 });
 
+/// 게시판 ..
+
+app.post("/board", (req, res) => {
+  const { title, line, content, userName } = req.body;
+  db.raw(
+    `INSERT INTO board (title, line, content, userName) VALUES("${title}", "${line}", "${content}", "${userName}")`
+  )
+    .then(() => {
+      res.status(200).send("ok!!!!!!!!!!!!!!!!!!!");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가 발생하였습니다....");
+    });
+});
+
 app.listen(7000, () => {
   console.log("서버가 켜 있어요...");
 });
