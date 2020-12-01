@@ -9,11 +9,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
-// app.get("/", (req, res) => {
-//   const password = req.body.password;
-//   res.send(crypto.createHash("sha512").update(password).digest("hex"));
-// });
-
 const knex = require("knex");
 const db = knex({
   client: "mysql",
@@ -83,6 +78,25 @@ app.post("/board", (req, res) => {
     });
 });
 
+app.get("/board/list", (req, res) => {
+  const {
+    id,
+    title,
+    line,
+    content,
+    userName,
+    created_data_time,
+    updated_date_time,
+  } = req.body;
+  db.raw(`SELECT * FROM board`)
+    .then((response) => {
+      res.send(response[0]);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가 발생하였습니다ㅠㅠ");
+    });
+});
 app.listen(7000, () => {
   console.log("서버가 켜 있어요...");
 });
