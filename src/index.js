@@ -79,15 +79,6 @@ app.post("/board", (req, res) => {
 });
 
 app.get("/board/list", (req, res) => {
-  const {
-    id,
-    title,
-    line,
-    content,
-    userName,
-    created_data_time,
-    updated_date_time,
-  } = req.body;
   db.raw(`SELECT * FROM board`)
     .then((response) => {
       res.send(response[0]);
@@ -95,6 +86,19 @@ app.get("/board/list", (req, res) => {
     .catch((err) => {
       console.log(err);
       res.status(500).send("에러가 발생하였습니다ㅠㅠ");
+    });
+});
+
+app.get("/board", (req, res) => {
+  const boardId = req.query.boardId;
+
+  db.raw(`SELECT * FROM board where id = "${boardId}"`)
+    .then((response) => {
+      res.send(response[0]);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가 발생함");
     });
 });
 app.listen(7000, () => {
