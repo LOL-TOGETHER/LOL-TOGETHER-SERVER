@@ -105,13 +105,24 @@ app.get("/board", (req, res) => {
 
 app.delete("/board", (req, res) => {
   const boardId = req.query.boardId;
-  db.raw(`DELETE FROM board where id = "${boardId}"`)
-    .then(() => {
-      res.status(200).send("ok!");
+  db.raw(`SELECT * FROM board where id = "${boardId}"`)
+    .then((response) => {
+      if (response[0].length == 0) {
+        console.log("글이 없어요");
+        return res.status(404).send("글이 없습니다.");
+      }
+      db.raw(`DELETE FROM board where id = "${boardId}"`)
+        .then(() => {
+          res.status(200).send("ok!!!!!!!!!");
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(500).send("에러가 발생함");
+        });
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("에러가 발생함");
+      res.status(500).send("에러가 발생했어요.");
     });
 });
 app.listen(7000, () => {
