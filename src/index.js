@@ -10,6 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 const knex = require("knex");
+const { response } = require("express");
 const db = knex({
   client: "mysql",
   connection: {
@@ -95,6 +96,18 @@ app.get("/board", (req, res) => {
   db.raw(`SELECT * FROM board where id = "${boardId}"`)
     .then((response) => {
       res.send(response[0]);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가 발생함");
+    });
+});
+
+app.delete("/board", (req, res) => {
+  const boardId = req.query.boardId;
+  db.raw(`DELETE FROM board where id = "${boardId}"`)
+    .then(() => {
+      res.status(200).send("ok!");
     })
     .catch((err) => {
       console.log(err);
