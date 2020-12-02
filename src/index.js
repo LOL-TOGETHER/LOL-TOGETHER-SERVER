@@ -125,6 +125,22 @@ app.delete("/board", (req, res) => {
       res.status(500).send("에러가 발생했어요.");
     });
 });
+
+app.put("/board", (req, res) => {
+  const boardId = req.query.boardId;
+  const { title, line, content, userName } = req.body;
+
+  db.raw(
+    `UPDATE board SET title = "${title}", line = "${line}", content = "${content}", userName = "${userName}" WHERE id = "${boardId}"`
+  )
+    .then(() => {
+      res.status(200).send("수정완료!!!");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가 발생함");
+    });
+});
 app.listen(7000, () => {
   console.log("서버가 켜 있어요...");
 });
