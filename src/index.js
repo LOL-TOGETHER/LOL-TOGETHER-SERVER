@@ -161,7 +161,7 @@ app.post("/board/comment", (req, res) => {
 app.delete("/board/comment", (req, res) => {
   const { board_Id, id } = req.query;
 
-  db.raw(`DELETE FROM COMMENT WHERE id = "${id}" AND board_Id = "${board_Id}"`)
+  db.raw(`DELETE FROM comment WHERE id = "${id}" AND board_Id = "${board_Id}"`)
     .then(() => {
       res.status(200).send("삭제되었습니다.");
     })
