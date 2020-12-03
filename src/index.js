@@ -143,7 +143,7 @@ app.put("/board", (req, res) => {
 });
 
 //댓글 관련 api
-app.post("/comment/boardId", (req, res) => {
+app.post("/board/comment", (req, res) => {
   const boardId = req.query.boardId;
   const { userName, content } = req.body;
   db.raw(
@@ -158,10 +158,10 @@ app.post("/comment/boardId", (req, res) => {
     });
 });
 
-app.delete("/comment/boardId", (req, res) => {
-  const boardId = req.query.boardId;
-  const id = req.body.id;
-  db.raw(`DELETE FROM COMMENT WHERE board_id = "${boardId}" AND id = "${id}"`)
+app.delete("/board/comment", (req, res) => {
+  const { board_Id, id } = req.query;
+
+  db.raw(`DELETE FROM COMMENT WHERE id = "${id}" AND board_Id = "${board_Id}"`)
     .then(() => {
       res.status(200).send("삭제되었습니다.");
     })
