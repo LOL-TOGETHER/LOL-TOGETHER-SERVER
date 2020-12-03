@@ -165,7 +165,7 @@ app.delete("/board/comment", (req, res) => {
     .then(() => {
       res.status(200).send("삭제되었습니다.");
     })
-    .catch(() => {
+    .catch((err) => {
       console.log(err);
       res.status(500).send("에러가 발생하였습니다.");
     });
