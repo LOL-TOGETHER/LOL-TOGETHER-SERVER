@@ -171,6 +171,17 @@ app.delete("/board/comment", (req, res) => {
     });
 });
 
+app.get("/board/comment", (req, res) => {
+  const { boardId } = req.query;
+
+  db.raw(`SELECT * FROM comment where board_Id = "${boardId}"`)
+    .then((response) => {
+      res.status(200).send(response[0]);
+    })
+    .catch((err) => {
+      res.status(500).send(err);
+    });
+});
 app.listen(7000, () => {
   console.log("서버가 켜 있어요...");
 });
