@@ -158,6 +158,19 @@ app.post("/comment/boardId", (req, res) => {
     });
 });
 
+app.delete("/comment/boardId", (req, res) => {
+  const boardId = req.query.boardId;
+  const id = req.body.id;
+  db.raw(`DELETE FROM COMMENT WHERE board_id = "${boardId}" AND id = "${id}"`)
+    .then(() => {
+      res.status(200).send("삭제되었습니다.");
+    })
+    .catch(() => {
+      console.log(err);
+      res.status(500).send("에러가 발생하였습니다.");
+    });
+});
+
 app.listen(7000, () => {
   console.log("서버가 켜 있어요...");
 });
