@@ -50,7 +50,7 @@ app.post("/signup", (req, res) => {
         `INSERT INTO member (email, password, salt, name) VALUES("${email}", "${hashPassword}", "${salt}", "${name}")`
       )
         .then(() => {
-          res.status(200).send("ok!");
+          res.status(200).send("가입 완료되었습니다!");
         })
         .catch((err) => {
           console.log(err);
