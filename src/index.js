@@ -141,6 +141,23 @@ app.put("/board", (req, res) => {
       res.status(500).send("에러가 발생함");
     });
 });
+
+//댓글 관련 api
+app.post("/comment/boardId", (req, res) => {
+  const boardId = req.query.boardId;
+  const { userName, content } = req.body;
+  db.raw(
+    `INSERT INTO comment(board_id, userName, content) VALUES ("${boardId}", "${userName}", "${content}")`
+  )
+    .then(() => {
+      res.status(200).send("작성되었습니다.");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가 발생함");
+    });
+});
+
 app.listen(7000, () => {
   console.log("서버가 켜 있어요...");
 });
