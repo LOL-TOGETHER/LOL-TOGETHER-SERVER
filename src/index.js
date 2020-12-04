@@ -1,23 +1,24 @@
 const express = require("express");
 const app = express();
-
+const jwt = require("jsonwebtoken");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const crypto = require("crypto");
+
+require("dotenv").config();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 const knex = require("knex");
-const { response } = require("express");
 const db = knex({
   client: "mysql",
   connection: {
     host: "localhost",
     user: "root",
     database: "loltogether",
-    password: "0217", // .gitignore 처리 해야함.
+    password: process.env.DB_PASSWORD,
   },
 });
 
@@ -35,10 +36,6 @@ function endcodePassword(password, salt) {
 
 app.post("/signup", (req, res) => {
   const { email, password, name } = req.body;
-  /**
-   * ////////////////////////////////////////////////////완료!!!!!!!!!!!////////문제점1. email이 중복될 수 있다 ,,, 중복된 회원이 있을 수 있다 중복되는 사용자가 없게끔.
-   * 문제점2. 비밀번호 입력한 게 그대로 들어간다... 암호화!!!!!!!!!
-   */
   db.raw(`SELECT email FROM member WHERE email = "${email}"`)
     .then((response) => {
       if (response[0].length !== 0) {
@@ -60,6 +57,44 @@ app.post("/signup", (req, res) => {
     .catch((err) => {
       console.log(err);
       res.status(500).send("에러다!!!!!");
+    });
+});
+
+function checkPassword(res, email, hashPassword) {
+  db.raw(
+    `SELECT id FROM member WHERE email = "${email}" AND password = "${hashPassword}"`
+  )
+    .then((response) => {
+      if (response[0].length == 0) {
+        return res.status(404).send("해당하는 회원이 없습니다.2");
+      }
+      const memberId = response[0][0].id;
+      const token = jwt.sign({ memberId: memberId }, process.env.TOKEN_SECRET, {
+        expiresIn: "60m",
+      });
+      return res.status(200).send(token);
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).send("에러다...");
+    });
+}
+
+app.post("/signup/check", (req, res) => {
+  const { email, password } = req.body;
+
+  db.raw(`SELECT salt FROM member where email = "${email}"`)
+    .then((response) => {
+      if (response[0].length == 0) {
+        return res.status(404).send("해당하는 회원이 없습니다.1");
+      }
+      const salt = response[0][0].salt;
+      const hashPassword = endcodePassword(password, salt);
+      checkPassword(res, email, hashPassword);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러다!!!");
     });
 });
 
@@ -173,7 +208,6 @@ app.delete("/board/comment", (req, res) => {
 
 app.get("/board/comment", (req, res) => {
   const { boardId } = req.query;
-
   db.raw(`SELECT * FROM comment where board_Id = "${boardId}"`)
     .then((response) => {
       res.status(200).send(response[0]);
@@ -182,6 +216,7 @@ app.get("/board/comment", (req, res) => {
       res.status(500).send(err);
     });
 });
+
 app.listen(7000, () => {
   console.log("서버가 켜 있어요...");
 });
