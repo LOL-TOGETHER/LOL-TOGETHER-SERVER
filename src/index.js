@@ -12,6 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors());
 
 const knex = require("knex");
+const { response } = require("express");
 const db = knex({
   client: "mysql",
   connection: {
@@ -27,6 +28,45 @@ app.get("/", (request, response) => {
   response.status(200).send("OK");
 });
 
+//마이페이지
+app.put("/mypage/username", (req, res) => {
+  const { name } = req.body;
+  const { id } = req.query;
+  db.raw(`SELECT name FROM member WHERE name = "${name}"`)
+    .then((response) => {
+      if (response[0].length !== 0) {
+        return res.send("중복된 닉네임이 있습니다.");
+      }
+      db.raw(`UPDATE member SET name = "${name}" WHERE id = "${id}"`)
+        .then(() => {
+          res.status(200).send("수정되었습니다.");
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(500).send("에러입니다ㅡ,.ㅡ");
+        });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("에러입니다");
+    });
+});
+
+app.post("/mypage/champ", (req, res) => {
+  const { member_id } = req.query;
+  const { name } = req.body;
+  db.raw(
+    `INSERT INTO champ(member_id, name) VALUES ("${member_id}", "${name}"), ("${member_id}", "${name}"), ("${member_id}", "${name}")`
+  )
+    .then(() => {
+      res.status(200).send("입력되었습니다");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가 발생하였습니다.");
+    });
+});
+
 function endcodePassword(password, salt) {
   return crypto
     .createHash("sha512")
@@ -34,6 +74,7 @@ function endcodePassword(password, salt) {
     .digest("hex");
 }
 
+// 게시판
 app.post("/signup", (req, res) => {
   const { email, password, name } = req.body;
   db.raw(`SELECT email FROM member WHERE email = "${email}"`)
