@@ -1,11 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config");
+const jwt = require("jsonwebtoken");
 
 router.post("/board", (req, res) => {
-  const { title, line, content, userName } = req.body;
+  const { title, line, content } = req.body;
+  const token = req.headers.authorization;
+  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
+
   db.raw(
-    `INSERT INTO board (title, line, content, userName) VALUES("${title}", "${line}", "${content}", "${userName}")`
+    `INSERT INTO board (title, line, content, member_id) VALUES("${title}", "${line}", "${content}", ${memberId})`
   )
     .then(() => {
       res.status(200).send("ok!!!!!!!!!!!!!!!!!!!");
