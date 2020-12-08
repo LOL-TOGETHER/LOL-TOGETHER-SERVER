@@ -28,7 +28,6 @@ app.get("/", (request, response) => {
   response.status(200).send("OK");
 });
 
-//마이페이지
 app.put("/mypage/username", (req, res) => {
   const { name } = req.body;
   const { id } = req.query;
@@ -52,6 +51,24 @@ app.put("/mypage/username", (req, res) => {
     });
 });
 
+app.put("/mypage/profileUrl", (req, res) => {
+  const token = req.headers.authorization;
+  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
+  const { profileUrl } = req.body;
+  db.raw(
+    `UPDATE member SET profileUrl = "${profileUrl}" WHERE id = "${memberId}"`
+  )
+    .then(() => {
+      console.log(memberId);
+      res.status(200).send("사진이 등록되었습니다.");
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("에러입니다.");
+    });
+});
+
+//아직 수정중
 app.post("/mypage/champ", (req, res) => {
   const { member_id } = req.query;
   const { name } = req.body;
