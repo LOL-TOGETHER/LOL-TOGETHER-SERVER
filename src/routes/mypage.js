@@ -35,7 +35,6 @@ router.put("/mypage/profileUrl", (req, res) => {
     `UPDATE member SET profileUrl = "${profileUrl}" WHERE id = "${memberId}"`
   )
     .then(() => {
-      console.log(memberId);
       res.status(200).send("사진이 등록되었습니다.");
     })
     .catch((error) => {
