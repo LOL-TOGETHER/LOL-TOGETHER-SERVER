@@ -60,4 +60,17 @@ router.post("/mypage/champ", (req, res) => {
     });
 });
 
+router.put("/mypage/line", (req, res) => {
+  const token = req.headers.authorization;
+  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
+  const { line } = req.body;
+  db.raw(`UPDATE member SET line = "${line}" WHERE id = ${memberId}`)
+    .then(() => {
+      res.status(200).send("입력되었습니다.");
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가 발생하였습니다.");
+    });
+});
 module.exports = router;
