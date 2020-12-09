@@ -21,7 +21,12 @@ router.post("/board", (req, res) => {
 });
 
 router.get("/board/list", (req, res) => {
-  db.raw(`SELECT * FROM board`)
+  const token = req.headers.authorization;
+  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
+
+  db.raw(
+    `SELECT distinct* FROM board INNER JOIN member ON board.member_id = member.id`
+  )
     .then((response) => {
       res.send(response[0]);
     })
