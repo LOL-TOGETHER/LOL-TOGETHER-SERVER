@@ -4,8 +4,9 @@ const db = require("../config");
 const jwt = require("jsonwebtoken");
 
 router.put("/mypage/username", (req, res) => {
+  const token = req.headers.authorization;
+  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
   const { name } = req.body;
-  const { id } = req.query;
   db.raw(`SELECT name FROM member WHERE name = "${name}"`)
     .then((response) => {
       if (response[0].length !== 0) {
@@ -48,9 +49,8 @@ router.post("/mypage/champ", (req, res) => {
   const token = req.headers.authorization;
   const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
   const { name } = req.body;
-  db.raw(
-    `INSERT INTO champ(member_id, name) VALUES ("${memberId}", "${name}"), ("${memberId}", "${name}"), ("${memberId}", "${name}")`
-  )
+  db.raw(`INSERT INTO champ(member_id, name) VALUES `);
+  db.raw()
     .then(() => {
       res.status(200).send("입력되었습니다");
     })
