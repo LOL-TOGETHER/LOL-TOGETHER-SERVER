@@ -22,7 +22,7 @@ router.post("/board", (req, res) => {
 
 router.get("/board/list", (req, res) => {
   db.raw(
-    `SELECT distinct* FROM board INNER JOIN member ON board.member_id = member.id`
+    `SELECT distinct board.id, board.title, board.line, board.content, board.created_data_time, member.id AS memberId, member.name FROM board INNER JOIN member ON board.member_id = member.id`
   )
     .then((response) => {
       res.send(response[0]);
