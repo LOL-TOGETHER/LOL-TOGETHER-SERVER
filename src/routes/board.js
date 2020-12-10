@@ -47,14 +47,20 @@ router.get("/board", (req, res) => {
 });
 
 router.delete("/board", (req, res) => {
+  const token = req.headers.authorization;
+  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
   const boardId = req.query.boardId;
-  db.raw(`SELECT * FROM board where id = "${boardId}"`)
+  db.raw(
+    `SELECT * FROM board where id = "${boardId}" and member_id = ${memberId}`
+  )
     .then((response) => {
       if (response[0].length == 0) {
         console.log("글이 없어요");
         return res.status(404).send("글이 없습니다.");
       }
-      db.raw(`DELETE FROM board where id = "${boardId}"`)
+      db.raw(
+        `DELETE FROM board where id = "${boardId}" and member_id = ${memberId}`
+      )
         .then(() => {
           res.status(200).send("ok!!!!!!!!!");
         })
@@ -70,11 +76,13 @@ router.delete("/board", (req, res) => {
 });
 
 router.put("/board", (req, res) => {
+  const token = req.headers.authorization;
+  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
   const boardId = req.query.boardId;
-  const { title, line, content, userName } = req.body;
+  const { title, line, content } = req.body;
 
   db.raw(
-    `UPDATE board SET title = "${title}", line = "${line}", content = "${content}", userName = "${userName}" WHERE id = "${boardId}"`
+    `UPDATE board SET title = "${title}", line = "${line}", content = "${content}" WHERE id = "${boardId}" and member_id = ${memberId}`
   )
     .then(() => {
       res.status(200).send("수정완료!!!");
@@ -88,7 +96,7 @@ router.put("/board", (req, res) => {
 //댓글 관련 api
 router.post("/board/comment", (req, res) => {
   const boardId = req.query.boardId;
-  const { userName, content } = req.body;
+  const { content } = req.body;
   db.raw(
     `INSERT INTO comment(board_id, userName, content) VALUES ("${boardId}", "${userName}", "${content}")`
   )
