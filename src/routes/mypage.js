@@ -28,11 +28,12 @@ router.put("/mypage", (req, res) => {
       res.status(500).send("에러입니다");
     });
 });
+
 router.get("/mypage", (req, res) => {
   const token = req.headers.authorization;
   const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
   db.raw(
-    `SELECT id, email, name, line,profileUrl, champions FROM member WHERE id = ${memberId}`
+    `SELECT id, email, name, line, profileUrl, champions FROM member WHERE id = ${memberId}`
   )
     .then((response) => {
       res.status(200).send(response[0]);
