@@ -44,4 +44,19 @@ router.get("/mypage", (req, res) => {
     });
 });
 
+router.get("/mypage/partner", (req, res) => {
+  const token = req.headers.authorization;
+  jwt.verify(token, process.env.TOKEN_SECRET);
+  const { userId } = req.query;
+
+  db.raw(`SELECT id, name, line, champions FROM member WHERE id = ${userId}`)
+    .then((response) => {
+      res.status(200).send(response[0]);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).send("에러입니다.");
+    });
+});
+
 module.exports = router;
