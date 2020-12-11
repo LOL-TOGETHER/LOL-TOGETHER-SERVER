@@ -80,7 +80,6 @@ router.put("/board", (req, res) => {
   const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
   const boardId = req.query.boardId;
   const { title, line, content } = req.body;
-
   db.raw(
     `UPDATE board SET title = "${title}", line = "${line}", content = "${content}" WHERE id = "${boardId}" and member_id = ${memberId}`
   )
@@ -93,14 +92,14 @@ router.put("/board", (req, res) => {
     });
 });
 
-//댓글 관련 api
+//댓글 관련 api 누가 댓글 달았는지 확인하기!
 router.post("/board/comment", (req, res) => {
   const token = req.headers.authorization;
-  jwt.verify(token, process.env.TOKEN_SECRET);
-  const boardId = req.query.boardId;
+  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
+  const { boardId } = req.query;
   const { content } = req.body;
   db.raw(
-    `INSERT INTO comment(board_id, content) VALUES ("${boardId}", ${content}")`
+    `INSERT INTO comment(member_id, board_id, content) VALUES("${memberId}", ${boardId}, "${content}")`
   )
     .then(() => {
       res.status(200).send("작성되었습니다.");
@@ -114,10 +113,10 @@ router.post("/board/comment", (req, res) => {
 router.delete("/board/comment", (req, res) => {
   const token = req.headers.authorization;
   const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
-  const { board_Id } = req.query;
+  const { boardId } = req.query;
 
   db.raw(
-    `DELETE FROM comment WHERE memberId = ${memberId} AND board_id = "${board_Id}"`
+    `DELETE FROM comment WHERE member_Id = ${memberId} AND board_id = "${boardId}"`
   )
     .then(() => {
       res.status(200).send("삭제되었습니다.");
@@ -129,12 +128,8 @@ router.delete("/board/comment", (req, res) => {
 });
 
 router.get("/board/comment", (req, res) => {
-  const token = req.headers.authorization;
-  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
   const { boardId } = req.query;
-  db.raw(
-    `SELECT * FROM comment where board_Id = "${boardId}" and memberId=${memberId}`
-  )
+  db.raw(`SELECT * FROM comment where board_Id = "${boardId}"`)
     .then((response) => {
       res.status(200).send(response[0]);
     })
