@@ -2,9 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { upload } = require("./routes/upload");
-
-require("dotenv").config();
+const { upload } = require("./utils/upload");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -19,7 +17,7 @@ app.use("/", authRouter);
 const mypageRouter = require("./routes/mypage");
 app.use("/", mypageRouter);
 
-app.post("/uploadOne", upload.single("img"), (req, res) => {
+app.post("/upload", upload.single("img"), (req, res) => {
   res.status(200).send(req.file.location);
 });
 
