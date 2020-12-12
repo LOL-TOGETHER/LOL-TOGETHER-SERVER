@@ -1,12 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const db = require("../config");
-const jwt = require("jsonwebtoken");
+const checkToken = require("../middlewares/tokenValidator");
 
 router.put("/mypage", (req, res) => {
-  const token = req.headers.authorization;
-  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
   const { name, profileUrl, champions, line } = req.body;
+  const memberId = checkToken(res, req.headers.authorization);
+
   db.raw(`SELECT name FROM member WHERE name = "${name}"`)
     .then((response) => {
       if (response[0].length !== 0) {
@@ -30,8 +30,7 @@ router.put("/mypage", (req, res) => {
 });
 
 router.get("/mypage", (req, res) => {
-  const token = req.headers.authorization;
-  const { memberId } = jwt.verify(token, process.env.TOKEN_SECRET);
+  const memberId = checkToken(res, req.headers.authorization);
   db.raw(
     `SELECT id, email, name, line, profileUrl, champions FROM member WHERE id = ${memberId}`
   )
@@ -45,10 +44,11 @@ router.get("/mypage", (req, res) => {
 });
 
 router.get("/mypage/partner", (req, res) => {
-  const token = req.headers.authorization;
-  jwt.verify(token, process.env.TOKEN_SECRET);
   const { userId } = req.query;
-
+  if (!userId) {
+    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+  }
+  checkToken(res, req.headers.authorization);
   db.raw(`SELECT id, name, line, champions FROM member WHERE id = ${userId}`)
     .then((response) => {
       res.status(200).send(response[0]);
