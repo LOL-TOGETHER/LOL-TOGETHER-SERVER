@@ -17,6 +17,7 @@ const storage = multerS3({
   key: (req, file, cb) => {
     cb(null, `uploads/${Date.now()}_${file.originalname}`);
   },
+  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 exports.upload = multer({ storage: storage });
