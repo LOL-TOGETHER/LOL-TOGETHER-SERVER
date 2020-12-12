@@ -20,10 +20,9 @@ const mypageRouter = require("./routes/mypage");
 app.use("/", mypageRouter);
 
 app.post("/uploadOne", upload.single("img"), (req, res) => {
-  {
-    console.log(req.file);
-  }
+  res.status(200).send(req.file.location);
 });
+
 app.get("/", (request, response) => {
   response.status(200).send("OK");
 });
