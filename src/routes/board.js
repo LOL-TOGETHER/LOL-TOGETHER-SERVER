@@ -34,6 +34,18 @@ router.get("/board/list", (req, res) => {
     });
 });
 
+router.get("/board/mylist", (req, res) => {
+  const memberId = checkToken(res, req.headers.authorization);
+  db.raw(`SELECT * FROM board where member_id = ${memberId}`)
+    .then((response) => {
+      res.status(200).send(response[0]);
+    })
+    .catch((err) => {
+      console.log(err);
+      res.status(500).send("에러가발생함");
+    });
+});
+
 router.get("/board", (req, res) => {
   const boardId = req.query.boardId;
   if (!boardId) {
