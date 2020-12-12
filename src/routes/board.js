@@ -27,9 +27,12 @@ router.get("/board/list", (req, res) => {
     res.status(400).send("필드를 빠짐없이 입력해주세요!");
   }
   db.raw(
-    `SELECT distinct board.id, board.title, board.line, board.content, board.created_data_time, member.id AS memberId, member.name FROM board INNER JOIN member ON board.member_id = member.id LIMIT ${limit} OFFSET ${
-      page * (limit - 1)
-    }`
+    `SELECT distinct board.id, board.title, board.line, board.content, board.created_data_time, member.id AS memberId, member.name 
+    FROM board 
+    INNER JOIN member 
+    ON board.member_id = member.id 
+    LIMIT ${limit} 
+    OFFSET ${page * (limit - 1)}`
   )
     .then((response) => {
       res.send(response[0]);
@@ -168,7 +171,7 @@ router.get("/board/comment", (req, res) => {
     res.status(400).send("필드를 빠짐없이 입력해주세요!");
   }
 
-  db.raw(`SELECT * FROM comment where board_Id = "${boardId}" LIMIT = {}`)
+  db.raw(`SELECT * FROM comment where board_Id = "${boardId}"`)
     .then((response) => {
       res.status(200).send(response[0]);
     })

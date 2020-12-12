@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { upload } = require("./routes/upload");
 
 require("dotenv").config();
 
@@ -18,6 +19,14 @@ app.use("/", authRouter);
 const mypageRouter = require("./routes/mypage");
 app.use("/", mypageRouter);
 
+app.post("/uploadOne", upload.single("img"), (req, res) => {
+  {
+    {
+      img: File;
+    }
+    console.log(req.file);
+  }
+});
 app.get("/", (request, response) => {
   response.status(200).send("OK");
 });
