@@ -61,7 +61,12 @@ router.get("/board", (req, res) => {
     res.status(400).send("필드를 빠짐없이 입력해주세요!");
   }
 
-  db.raw(`SELECT * FROM board where id = "${boardId}"`)
+  db.raw(
+    `SELECT board.id, board.content, board.created_data_time, board.member_id, board.title,member.id AS memberId, member.name
+    FROM board
+    INNER JOIN MEMBER
+    ON board.member_id=member.id`
+  )
     .then((response) => {
       res.send(response[0]);
     })
