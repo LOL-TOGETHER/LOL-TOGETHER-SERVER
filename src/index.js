@@ -21,9 +21,6 @@ app.use("/", mypageRouter);
 
 app.post("/uploadOne", upload.single("img"), (req, res) => {
   {
-    {
-      img: File;
-    }
     console.log(req.file);
   }
 });

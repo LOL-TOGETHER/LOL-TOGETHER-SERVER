@@ -3,14 +3,14 @@ const multerS3 = require("multer-s3");
 const AWS = require("aws-sdk");
 
 const s3 = new AWS.S3({
-  accessKeyId: process.env.accessKeyID,
-  secretAccessKey: process.env.secretAcessKey,
+  accessKey: process.env.accessKey,
+  secretKey: process.env.secretKey,
   region: process.env.REGION,
 });
 
 const storage = multerS3({
   s3: s3,
-  bucket: "project-portfolio-upload",
+  bucket: "loltogether-bucket",
   contentType: multerS3.AUTO_CONTENT_TYPE,
   acl: "public-read",
   metadata: function (req, file, cb) {
