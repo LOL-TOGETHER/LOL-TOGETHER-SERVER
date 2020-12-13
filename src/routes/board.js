@@ -27,7 +27,7 @@ router.get("/board/list", (req, res) => {
   if (!page || !limit) {
     res.status(400).send("필드를 빠짐없이 입력해주세요!");
   }
-  db.raw(`SELECT count(*) FROM board`).then((response) => {
+  db.raw(`SELECT count(*) AS total FROM board`).then((response) => {
     const totalCount = response[0];
     db.raw(
       `SELECT distinct board.id, board.title, board.line, board.content, board.created_data_time, member.id AS memberId, member.name 
