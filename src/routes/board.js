@@ -187,9 +187,9 @@ router.get("/board/comment", (req, res) => {
   db.raw(
     `SELECT comment.id, comment.content, comment.member_id, member.id AS memberId, member.name
     FROM comment
-    INNER JOIN MEMBER
+    INNER JOIN member
     ON comment.member_id=member.id 
-    WHERE board_id = "${boardId}"`
+    WHERE board_id = ${boardId}`
   )
     .then((response) => {
       res.status(200).send(response[0]);
