@@ -161,14 +161,13 @@ router.post("/board/comment", (req, res) => {
 
 router.delete("/board/comment", (req, res) => {
   const { boardId } = req.query;
+  const memberId = checkToken(res, req.headers.authorization);
   if (!boardId) {
     res.status(400).send("필드를 빠짐없이 입력해주세요!");
   }
 
-  const memberId = checkToken(res, req.authorization.token);
-
   db.raw(
-    `DELETE FROM comment WHERE member_Id = ${memberId} AND board_id = "${boardId}"`
+    `DELETE FROM comment WHERE member_id = ${memberId} AND board_id = "${boardId}"`
   )
     .then(() => {
       res.status(200).send("삭제되었습니다.");
