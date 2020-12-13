@@ -35,7 +35,8 @@ router.get("/board/list", (req, res) => {
         INNER JOIN member 
         ON board.member_id = member.id 
         LIMIT ${limit} 
-        OFFSET ${page * (limit - 1)}`
+        OFFSET ${page * (limit - 1)}
+        ORDER BY id DESC`
     )
       .then((response) => {
         res.status(200).send({
@@ -185,7 +186,7 @@ router.get("/board/comment", (req, res) => {
   }
 
   db.raw(
-    `SELECT comment.id, comment.content, comment.member_id, member.id AS memberId, member.name
+    `SELECT comment.id, comment.content, comment.member_id, comment.created_data_time, member.id AS memberId, member.name
     FROM comment
     INNER JOIN member
     ON comment.member_id=member.id 
