@@ -34,9 +34,10 @@ router.get("/board/list", (req, res) => {
         FROM board 
         INNER JOIN member 
         ON board.member_id = member.id 
+        ORDER BY board.id DESC
         LIMIT ${limit} 
         OFFSET ${page * (limit - 1)}
-        ORDER BY board.id DESC`
+       `
     )
       .then((response) => {
         res.status(200).send({
