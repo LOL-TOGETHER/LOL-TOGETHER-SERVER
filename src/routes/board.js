@@ -72,7 +72,8 @@ router.get("/board", (req, res) => {
     `SELECT DISTINCT board.id, board.content, board.line, board.created_data_time, board.member_id, board.title, member.id AS memberId, member.name
     FROM board
     INNER JOIN member
-    ON board.member_id=member.id`
+    ON board.member_id=member.id
+    WHERE board.id = ${boardId}`
   )
     .then((response) => {
       res.send(response[0]);
