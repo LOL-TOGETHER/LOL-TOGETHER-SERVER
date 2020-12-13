@@ -30,7 +30,7 @@ router.get("/board/list", (req, res) => {
   db.raw(`SELECT count(*) AS total FROM board`).then((response) => {
     const totalCount = response[0];
     db.raw(
-      `SELECT board.id, board.title, board.line, board.content, board.created_data_time, member.id AS memberId, member.name 
+      `SELECT DISTINCT board.id, board.title, board.line, board.content, board.created_data_time, member.id AS memberId, member.name 
         FROM board 
         INNER JOIN member 
         ON board.member_id = member.id 
@@ -69,9 +69,9 @@ router.get("/board", (req, res) => {
   }
 
   db.raw(
-    `SELECT board.id, board.content, board.line, board.created_data_time, board.member_id, board.title, member.id AS memberId, member.name
+    `SELECT DISTINCT board.id, board.content, board.line, board.created_data_time, board.member_id, board.title, member.id AS memberId, member.name
     FROM board
-    INNER JOIN MEMBER
+    INNER JOIN member
     ON board.member_id=member.id`
   )
     .then((response) => {
