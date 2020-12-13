@@ -36,7 +36,7 @@ router.get("/board/list", (req, res) => {
         ON board.member_id = member.id 
         LIMIT ${limit} 
         OFFSET ${page * (limit - 1)}
-        ORDER BY id DESC`
+        ORDER BY board.id DESC`
     )
       .then((response) => {
         res.status(200).send({
