@@ -1,4 +1,5 @@
 const express = require("express");
+const { count } = require("../config");
 const router = express.Router();
 const db = require("../config");
 const checkToken = require("../middlewares/tokenValidator");
@@ -26,21 +27,27 @@ router.get("/board/list", (req, res) => {
   if (!page || !limit) {
     res.status(400).send("필드를 빠짐없이 입력해주세요!");
   }
-  db.raw(
-    `SELECT distinct board.id, board.title, board.line, board.content, board.created_data_time, member.id AS memberId, member.name 
-    FROM board 
-    INNER JOIN member 
-    ON board.member_id = member.id 
-    LIMIT ${limit} 
-    OFFSET ${page * (limit - 1)}`
-  )
-    .then((response) => {
-      res.send(response[0]);
-    })
-    .catch((err) => {
-      console.log(err);
-      res.status(500).send("에러가 발생하였습니다ㅠㅠ");
-    });
+  db.raw(`SELECT count(*) FROM board`).then((response) => {
+    const totalCount = response[0];
+    db.raw(
+      `SELECT distinct board.id, board.title, board.line, board.content, board.created_data_time, member.id AS memberId, member.name 
+        FROM board 
+        INNER JOIN member 
+        ON board.member_id = member.id 
+        LIMIT ${limit} 
+        OFFSET ${page * (limit - 1)}`
+    )
+      .then((response) => {
+        res.status(200).send({
+          count: totalCount[0],
+          response: response[0],
+        });
+      })
+      .catch((err) => {
+        console.log(err);
+        res.status(500).send("에러가 발생하였습니다ㅠㅠ");
+      });
+  });
 });
 
 router.get("/board/mylist", (req, res) => {
