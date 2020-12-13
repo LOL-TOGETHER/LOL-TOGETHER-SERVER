@@ -69,7 +69,7 @@ router.get("/board", (req, res) => {
   }
 
   db.raw(
-    `SELECT board.id, board.content, board.created_data_time, board.member_id, board.title,member.id AS memberId, member.name
+    `SELECT DISTINCT board.id, board.content, board.line, board.created_data_time, board.member_id, board.title, member.id AS memberId, member.name
     FROM board
     INNER JOIN MEMBER
     ON board.member_id=member.id`
