@@ -45,12 +45,9 @@ router.get("/mypage", (req, res) => {
 
 router.get("/mypage/partner", (req, res) => {
   const { userId } = req.query;
-  //const memberId = checkToken(res, req.headers.authorization);
   if (!userId) {
     res.status(400).send("필드를 빠짐없이 입력해주세요!");
   }
-  //checkToken(res, req.headers.authorization);
-  //console.log(memberId);
   db.raw(`SELECT id, name, line, champions FROM member WHERE id = ${userId}`)
     .then((response) => {
       res.status(200).send(response[0]);
