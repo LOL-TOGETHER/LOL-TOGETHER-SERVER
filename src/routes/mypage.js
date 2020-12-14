@@ -48,7 +48,9 @@ router.get("/mypage/partner", (req, res) => {
   if (!userId) {
     res.status(400).send("필드를 빠짐없이 입력해주세요!");
   }
-  db.raw(`SELECT id, name, line, champions FROM member WHERE id = ${userId}`)
+  db.raw(
+    `SELECT id, name, line, champions, profileUrl FROM member WHERE id = ${userId}`
+  )
     .then((response) => {
       res.status(200).send(response[0]);
     })
