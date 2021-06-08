@@ -4,7 +4,7 @@ const router = express.Router();
 const db = require('../config');
 const checkToken = require('../middlewares/tokenValidator');
 
-router.post('/board', (req, res) => {
+router.post('/api/v1/board', (req, res) => {
   const { title, line, content } = req.body;
   if (!title || !line || !content) {
     res.status(400).send('필드를 빠짐없이 입력해주세요!');
@@ -22,7 +22,7 @@ router.post('/board', (req, res) => {
     });
 });
 
-router.get('/board/list', (req, res) => {
+router.get('/api/v1/board/list', (req, res) => {
   const { page, limit } = req.query;
   if (!page || !limit) {
     res.status(400).send('필드를 빠짐없이 입력해주세요!');
@@ -52,7 +52,7 @@ router.get('/board/list', (req, res) => {
   });
 });
 
-router.get('/board/mylist', (req, res) => {
+router.get('/api/v1/board/mylist', (req, res) => {
   const memberId = checkToken(res, req.headers.authorization);
   db.raw(`SELECT * FROM board where member_id = ${memberId}`)
     .then((response) => {
@@ -60,11 +60,11 @@ router.get('/board/mylist', (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send('에러가발생함');
+      res.status(500).send('에러가 발생함');
     });
 });
 
-router.get('/board', (req, res) => {
+router.get('/api/v1/board', (req, res) => {
   const boardId = req.query.boardId;
   if (!boardId) {
     res.status(400).send('필드를 빠짐없이 입력해주세요!');
@@ -86,7 +86,7 @@ router.get('/board', (req, res) => {
     });
 });
 
-router.delete('/board', (req, res) => {
+router.delete('/api/v1/board', (req, res) => {
   const boardId = req.query.boardId;
   if (!boardId) {
     res.status(400).send('필드를 빠짐없이 입력해주세요!');
@@ -118,7 +118,7 @@ router.delete('/board', (req, res) => {
     });
 });
 
-router.put('/board', (req, res) => {
+router.put('/api/v1/board', (req, res) => {
   const boardId = req.query.boardId;
   const { title, line, content } = req.body;
   if (!title || !content || !line) {
@@ -139,7 +139,7 @@ router.put('/board', (req, res) => {
 });
 
 //댓글 관련 api 누가 댓글 달았는지 확인하기!
-router.post('/board/comment', (req, res) => {
+router.post('/api/v1/board/comment', (req, res) => {
   const { boardId } = req.query;
   const { content } = req.body;
   if (!boardId || !content) {
@@ -159,7 +159,7 @@ router.post('/board/comment', (req, res) => {
     });
 });
 
-router.delete('/board/comment', (req, res) => {
+router.delete('/api/v1/board/comment', (req, res) => {
   const { boardId } = req.query;
   const memberId = checkToken(res, req.headers.authorization);
   if (!boardId) {
@@ -178,7 +178,7 @@ router.delete('/board/comment', (req, res) => {
     });
 });
 
-router.get('/board/comment', (req, res) => {
+router.get('/api/v1/board/comment', (req, res) => {
   const { boardId } = req.query;
 
   if (!boardId) {
