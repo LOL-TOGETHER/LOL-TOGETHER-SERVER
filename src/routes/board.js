@@ -1,31 +1,31 @@
-const express = require("express");
-const { count } = require("../config");
+const express = require('express');
+const { count } = require('../config');
 const router = express.Router();
-const db = require("../config");
-const checkToken = require("../middlewares/tokenValidator");
+const db = require('../config');
+const checkToken = require('../middlewares/tokenValidator');
 
-router.post("/board", (req, res) => {
+router.post('/board', (req, res) => {
   const { title, line, content } = req.body;
   if (!title || !line || !content) {
-    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+    res.status(400).send('필드를 빠짐없이 입력해주세요!');
   }
   const memberId = checkToken(res, req.headers.authorization);
   db.raw(
     `INSERT INTO board (title, line, content, member_id) VALUES("${title}", "${line}", "${content}", ${memberId})`
   )
     .then(() => {
-      res.status(200).send("ok!!!!!!!!!!!!!!!!!!!");
+      res.status(200).send('ok!');
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("에러가 발생하였습니다....");
+      res.status(500).send('에러가 발생하였습니다.');
     });
 });
 
-router.get("/board/list", (req, res) => {
+router.get('/board/list', (req, res) => {
   const { page, limit } = req.query;
   if (!page || !limit) {
-    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+    res.status(400).send('필드를 빠짐없이 입력해주세요!');
   }
   db.raw(`SELECT count(*) AS total FROM board`).then((response) => {
     const totalCount = response[0];
@@ -47,12 +47,12 @@ router.get("/board/list", (req, res) => {
       })
       .catch((err) => {
         console.log(err);
-        res.status(500).send("에러가 발생하였습니다ㅠㅠ");
+        res.status(500).send('에러가 발생하였습니다.');
       });
   });
 });
 
-router.get("/board/mylist", (req, res) => {
+router.get('/board/mylist', (req, res) => {
   const memberId = checkToken(res, req.headers.authorization);
   db.raw(`SELECT * FROM board where member_id = ${memberId}`)
     .then((response) => {
@@ -60,14 +60,14 @@ router.get("/board/mylist", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("에러가발생함");
+      res.status(500).send('에러가발생함');
     });
 });
 
-router.get("/board", (req, res) => {
+router.get('/board', (req, res) => {
   const boardId = req.query.boardId;
   if (!boardId) {
-    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+    res.status(400).send('필드를 빠짐없이 입력해주세요!');
   }
 
   db.raw(
@@ -82,14 +82,14 @@ router.get("/board", (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("에러가 발생함");
+      res.status(500).send('에러가 발생함');
     });
 });
 
-router.delete("/board", (req, res) => {
+router.delete('/board', (req, res) => {
   const boardId = req.query.boardId;
   if (!boardId) {
-    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+    res.status(400).send('필드를 빠짐없이 입력해주세요!');
   }
   const memberId = checkToken(res, req.headers.authorization);
 
@@ -98,31 +98,31 @@ router.delete("/board", (req, res) => {
   )
     .then((response) => {
       if (response[0].length == 0) {
-        console.log("글이 없어요");
-        return res.status(404).send("글이 없습니다.");
+        console.log('글이 없어요');
+        return res.status(404).send('글이 없습니다.');
       }
       db.raw(
         `DELETE FROM board where id = "${boardId}" and member_id = ${memberId}`
       )
         .then(() => {
-          res.status(200).send("ok!!!!!!!!!");
+          res.status(200).send('ok!!!!!!!!!');
         })
         .catch((err) => {
           console.log(err);
-          res.status(500).send("에러가 발생함");
+          res.status(500).send('에러가 발생함');
         });
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("에러가 발생했어요.");
+      res.status(500).send('에러가 발생했어요.');
     });
 });
 
-router.put("/board", (req, res) => {
+router.put('/board', (req, res) => {
   const boardId = req.query.boardId;
   const { title, line, content } = req.body;
   if (!title || !content || !line) {
-    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+    res.status(400).send('필드를 빠짐없이 입력해주세요!');
   }
   const memberId = checkToken(res, req.headers.authorization);
 
@@ -130,20 +130,20 @@ router.put("/board", (req, res) => {
     `UPDATE board SET title = "${title}", line = "${line}", content = "${content}" WHERE id = "${boardId}" and member_id = ${memberId}`
   )
     .then(() => {
-      res.status(200).send("수정완료!!!");
+      res.status(200).send('수정완료!!!');
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("에러가 발생함");
+      res.status(500).send('에러가 발생함');
     });
 });
 
 //댓글 관련 api 누가 댓글 달았는지 확인하기!
-router.post("/board/comment", (req, res) => {
+router.post('/board/comment', (req, res) => {
   const { boardId } = req.query;
   const { content } = req.body;
   if (!boardId || !content) {
-    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+    res.status(400).send('필드를 빠짐없이 입력해주세요!');
   }
   const memberId = checkToken(res, req.headers.authorization);
 
@@ -151,38 +151,38 @@ router.post("/board/comment", (req, res) => {
     `INSERT INTO comment(member_id, board_id, content) VALUES("${memberId}", ${boardId}, "${content}")`
   )
     .then(() => {
-      res.status(200).send("작성되었습니다.");
+      res.status(200).send('작성되었습니다.');
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("에러가 발생함");
+      res.status(500).send('에러가 발생함');
     });
 });
 
-router.delete("/board/comment", (req, res) => {
+router.delete('/board/comment', (req, res) => {
   const { boardId } = req.query;
   const memberId = checkToken(res, req.headers.authorization);
   if (!boardId) {
-    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+    res.status(400).send('필드를 빠짐없이 입력해주세요!');
   }
 
   db.raw(
     `DELETE FROM comment WHERE member_id = ${memberId} AND board_id = "${boardId}"`
   )
     .then(() => {
-      res.status(200).send("삭제되었습니다.");
+      res.status(200).send('삭제되었습니다.');
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send("에러가 발생하였습니다.");
+      res.status(500).send('에러가 발생하였습니다.');
     });
 });
 
-router.get("/board/comment", (req, res) => {
+router.get('/board/comment', (req, res) => {
   const { boardId } = req.query;
 
   if (!boardId) {
-    res.status(400).send("필드를 빠짐없이 입력해주세요!");
+    res.status(400).send('필드를 빠짐없이 입력해주세요!');
   }
 
   db.raw(
