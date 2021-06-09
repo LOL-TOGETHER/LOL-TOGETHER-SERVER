@@ -32,6 +32,7 @@ TOKEN_SECRET=loltogether
 mysql -u root -p [password]
 
 CREATE DATABASE loltogether;
+
 use loltogether;
 
 source sql/V1__init.sql
