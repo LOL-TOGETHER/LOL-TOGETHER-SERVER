@@ -29,7 +29,7 @@ TOKEN_SECRET=loltogether
 
 ```bash
 
-mysql -u root -p [password]
+mysql 로그인
 
 CREATE DATABASE loltogether;
 
