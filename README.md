@@ -18,7 +18,7 @@
 
 ## Getting Started
 
-### 1. .env 환경 변수
+### 1. Create .env
 
 ```bash
 DB_PASSWORD=[DB_PASSWORD]
