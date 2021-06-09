@@ -16,23 +16,31 @@
 - Library: Node.js
 - Database: MySQL
 
-## Installation
+## Get started
 
-.env
+### 1. 환경 변수
 
-```shell
+```bash
 DB_PASSWORD=[DB_PASSWORD]
 TOKEN_SECRET=loltogether
 ```
 
-```shell
+### 2 . DB Setup
+
+```bash
+
+mysql -u root -p [password]
+
 CREATE DATABASE loltogether;
+use loltogether;
 
-// TODO .sql
+source sql/V1__init.sql
+```
 
+### 3. Build & Start
 
-yarn install (or npm install)
+```bash
+npm install (or yarn install)
 
-yarn start (or npm start)
-
+npm start (or yarn start)
 ```
