@@ -18,7 +18,7 @@
 
 ## Getting started
 
-### 1. 환경 변수
+### 1. .env 환경 변수
 
 ```bash
 DB_PASSWORD=[DB_PASSWORD]
