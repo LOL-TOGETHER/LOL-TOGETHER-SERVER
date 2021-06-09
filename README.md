@@ -13,9 +13,7 @@
 ### ⚡️ LOL-TOGETHER TECHNOLOGY ⚡️
 
 - Language: Javascript
-
-- S/W Flatform: Node.js
-
+- Library: Node.js
 - Database: MySQL
 
 ## Installation
