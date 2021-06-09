@@ -17,7 +17,6 @@ CREATE TABLE member
     `salt`               VARCHAR(255)    NOT NULL, 
     `name`               VARCHAR(100)    NOT NULL, 
     `created_data_time`  TIMESTAMP       NOT NULL, 
-    `line`               VARCHAR(30)     NULL, 
     `champions`          VARCHAR(100)    NULL, 
     CONSTRAINT  PRIMARY KEY (id)
 );
@@ -26,7 +25,8 @@ CREATE TABLE member
 CREATE TABLE board
 (
     `id`                 BIGINT         NOT NULL    AUTO_INCREMENT, 
-    `member_id`          BIGINT         NULL, 
+    `member_id`          BIGINT         NULL,
+    'line'               VARCHAR(30)    NULL, 
     `title`              VARCHAR(50)    NULL, 
     `content`            TEXT           NULL, 
     `created_data_time`  DATETIME       NULL, 

@@ -155,7 +155,7 @@ router.post('/api/v1/board/comment', (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).send('에러가 발생함');
+      res.status(500).send('에러가 발생하였습니다.');
     });
 });
 
