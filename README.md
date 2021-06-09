@@ -16,7 +16,7 @@
 - Library: Node.js
 - Database: MySQL
 
-## Getting started
+## Getting Started
 
 ### 1. .env 환경 변수
 
