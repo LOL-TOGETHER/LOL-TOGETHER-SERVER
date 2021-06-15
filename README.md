@@ -25,7 +25,7 @@ DB_PASSWORD=[DB_PASSWORD]
 TOKEN_SECRET=loltogether
 ```
 
-### 2 . DB Setup
+### 2. DB Setup
 
 ```bash
 
